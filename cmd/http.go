@@ -36,12 +36,13 @@ var httpCmd = &cobra.Command{
 	Long:  `Example of an http config server`,
 	Run: func(cmd *cobra.Command, args []string) {
 		server := webserver.Server{
-			HttpPort:          port,
-			ConsulURL:         consulURL,
-			ConsulPort:        consulPort,
-			ConsulPrefix:      consulPrefix,
-			ConsulAutoRefresh: consulAutoRefresh,
-			AppName:           appName,
+			HttpPort:          		  port,
+			ConsulURL:         		  consulURL,
+			ConsulPort:        		  consulPort,
+			ConsulPrefix:             consulPrefix,
+			ConsulAutoRefresh:        consulAutoRefresh,
+			ConsulAutoRefreshSeconds: consulAutoRefreshDuration,
+			AppName:                  appName,
 		}
 		server.Serve()
 	},

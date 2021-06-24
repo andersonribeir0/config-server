@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/andersonribeir0/config-server/config"
 	"github.com/andersonribeir0/config-server/logger"
@@ -22,8 +23,11 @@ var serverConfig *config.Config
 var log *logger.Log
 
 func (s Server) ConfigHandler(w http.ResponseWriter, r *http.Request) {
-	_, err := w.Write([]byte(fmt.Sprintf("%+v\n", config.GetConfigKV())))
-	if err != nil {
+	b, err := json.Marshal(config.GetConfigKV())
+	w.Header().Add("Content-Type", "application/json")
+	if err == nil {
+		_, err = w.Write(b)
+	} else {
 		log.Error(fmt.Sprintf("An error occurred when getting config KV: %s", err.Error()), err)
 		return
 	}

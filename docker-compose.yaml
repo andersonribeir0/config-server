@@ -1,11 +1,19 @@
 version: "3"
 
 services:
-  app:
-    build: .
-    container_name: my-cli-app
-    volumes:
-      - .:/go/src/
+  config-server:
+    image: config-server
+    container_name: config-server
+    ports:
+      - '4040:8080'
+    command:
+      - "config-server"
+      - "http"
+      - "-p"
+      - ":8080"
+      - "--auto-refresh-duration"
+      - "10"
+
 
   consul:
     image: docker.io/bitnami/consul:1
