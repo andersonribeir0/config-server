@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    container_name: my-cli-app
+    volumes:
+      - .:/go/src/
+
+  consul:
+    image: docker.io/bitnami/consul:1
+    volumes:
+      - /Users/anderson.ribeiro/consul/:/bitnami/consul
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8301:8301/udp'
+      - '8500:8500'
+      - '8600:8600'
