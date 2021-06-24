@@ -18,7 +18,7 @@ services:
   consul:
     image: docker.io/bitnami/consul:1
     volumes:
-      - /Users/anderson.ribeiro/consul/:/bitnami/consul
+      - ./consul_volume/:/bitnami/consul
     ports:
       - '8300:8300'
       - '8301:8301'
