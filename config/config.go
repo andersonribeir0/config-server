@@ -38,7 +38,7 @@ func union(a, b []string) []string {
 	return a
 }
 
-func getConfig(settings Settings) *Config {
+func GetConfig(settings Settings) *Config {
 	if config == nil {
 		config = &Config{
 			Keys:   nil,
@@ -56,10 +56,10 @@ func GetConfigKV() map[string]string{
 	return newKV
 }
 
-func Build(settings Settings, keys []string) *Config {
+func build(settings Settings, keys []string) *Config {
 	var allKeys []string
 
-	conf := getConfig(settings)
+	conf := GetConfig(settings)
 	log := conf.Logger
 	conf.Keys = make(map[string]string)
 
@@ -99,14 +99,28 @@ func Build(settings Settings, keys []string) *Config {
 
 	conf.Dumps(settings)
 
-	if settings.AutoRefresh {
-		if settings.AutoRefreshSeconds*time.Second < time.Second {
-			settings.AutoRefreshSeconds = 1
-		}
-		time.AfterFunc(settings.AutoRefreshSeconds*time.Second, func() {
-			go Build(settings, keys)
-		})
+	return conf
+}
+
+func Start(settings Settings, keys []string) *Config{
+	conf := build(settings, keys)
+	if !settings.AutoRefresh {
+		return conf
 	}
+
+	if settings.AutoRefreshSeconds*time.Second < time.Second {
+		settings.AutoRefreshSeconds = 1
+	}
+
+	ticker := time.NewTicker(settings.AutoRefreshSeconds * time.Second)
+	go func() {
+		for {
+			select {
+				case <-ticker.C:
+					conf = build(settings, keys)
+			}
+		}
+	}()
 
 	return conf
 }
@@ -121,7 +135,7 @@ func (c Config) byteToString(bs []byte) string {
 
 func (c Config) Dumps(settings Settings) {
 	data, err := json.Marshal(c.Keys)
-	config := getConfig(settings)
+	config := GetConfig(settings)
 	if err != nil {
 		return
 	}

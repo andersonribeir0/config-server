@@ -35,13 +35,14 @@ func (s Server) ConfigHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s Server) Serve() {
 	log = logger.NewLogger(s.AppName)
-	serverConfig = config.Build(config.Settings{
+	serverConfig = config.Start(config.Settings{
 		ConsulUrl:   s.ConsulURL + s.ConsulPort,
 		Prefix:      s.ConsulPrefix,
 		AppName:     s.AppName,
 		AutoRefresh: s.ConsulAutoRefresh,
 		AutoRefreshSeconds: time.Duration(s.ConsulAutoRefreshSeconds),
 	}, nil)
+
 	http.HandleFunc("/", s.ConfigHandler)
 	if err := http.ListenAndServe(s.HttpPort, nil); err != nil {
 		log.Error(fmt.Sprintf("An error occurred when trying to run ConfigHandler: %s", err.Error()), err)
