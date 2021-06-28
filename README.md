@@ -15,7 +15,7 @@ In case of consul hit failure, it should try to get local environment variable w
 1. Build an image by performing `docker build -t config-server .`
 
 
-2. Inside docker-compose.yaml file you should be able to find commands into `command` key into config-server service.
+2. Inside docker-compose.yaml file you should be able to find commands into `command` key in config-server service.
 There is some params that may be passed to run the http server:
 ```
 -n, --app-name string             Application name. (default "config-server")
